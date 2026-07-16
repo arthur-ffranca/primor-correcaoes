@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { loginSchema } from "@/lib/validation/auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET ?? "local-development-secret",
   session: {
     strategy: "jwt",
   },

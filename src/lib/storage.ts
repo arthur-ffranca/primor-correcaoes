@@ -1,4 +1,5 @@
 import {
+  GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -43,7 +44,6 @@ export function createEssayUploadKey(input: {
 }
 
 export async function uploadEssayPage(input: UploadEssayPageInput): Promise<StoredEssayPage> {
-  const env = getEnv();
   const key = createEssayUploadKey(input);
   const storageClient = createStorageClient();
 
@@ -61,4 +61,18 @@ export async function uploadEssayPage(input: UploadEssayPageInput): Promise<Stor
     mimeType: input.contentType,
     pageOrder: input.pageOrder,
   };
+}
+
+export async function getObjectBuffer(key: string): Promise<Buffer> {
+  const env = getEnv();
+  const storageClient = createStorageClient();
+  const response = await storageClient.send(
+    new GetObjectCommand({
+      Bucket: env.S3_BUCKET,
+      Key: key,
+    }),
+  );
+
+  const bytes = await response.Body?.transformToByteArray();
+  return Buffer.from(bytes ?? []);
 }
