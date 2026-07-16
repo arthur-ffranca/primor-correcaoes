@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String            @id @default(cuid())
+  email        String            @unique
+  passwordHash String            @map("password_hash")
+  essays       EssaySubmission[]
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+}
+
+model EssaySubmission {
+  id                  String               @id @default(cuid())
+  userId              String               @map("user_id")
+  studentName         String               @map("student_name")
+  classGroup          String               @map("class_group")
+  theme               String
+  submissionDate      DateTime             @map("submission_date")
+  status              EssayStatus          @default(submitted)
+  files               EssayFile[]
+  transcription       Transcription?
+  preliminaryAnalysis PreliminaryAnalysis?
+  finalReview         FinalReview?
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("essay_submissions")
+}
+
+model EssayFile {
+  id               String          @id @default(cuid())
+  essaySubmissionId String         @map("essay_submission_id")
+  storagePath      String          @map("storage_path")
+  mimeType         String          @map("mime_type")
+  pageOrder        Int             @map("page_order")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  essaySubmission  EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
+
+  @@map("essay_files")
+}
+
+model Transcription {
+  id               String          @id @default(cuid())
+  essaySubmissionId String         @unique @map("essay_submission_id")
+  rawText          String          @map("raw_text")
+  normalizedText   String          @map("normalized_text")
+  uncertaintyNotes Json            @map("uncertainty_notes")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  essaySubmission  EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
+
+  @@map("transcriptions")
+}
+
+model PreliminaryAnalysis {
+  id                     String          @id @default(cuid())
+  essaySubmissionId      String          @unique @map("essay_submission_id")
+  issuesPayload          Json            @map("issues_payload")
+  criterionScoresPayload Json            @map("criterion_scores_payload")
+  totalRawScore          Float           @map("total_raw_score")
+  total1000Score         Int             @map("total_1000_score")
+  processingNotes        Json            @map("processing_notes")
+  createdAt              DateTime        @default(now()) @map("created_at")
+  updatedAt              DateTime        @updatedAt @map("updated_at")
+  essaySubmission        EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
+
+  @@map("preliminary_analyses")
+}
+
+model FinalReview {
+  id                            String          @id @default(cuid())
+  essaySubmissionId             String          @unique @map("essay_submission_id")
+  approvedTranscription         String          @map("approved_transcription")
+  approvedIssuesPayload         Json            @map("approved_issues_payload")
+  approvedCriterionScoresPayload Json           @map("approved_criterion_scores_payload")
+  approvedTotalRawScore         Float           @map("approved_total_raw_score")
+  approvedTotal1000Score        Int             @map("approved_total_1000_score")
+  reviewerNotes                 String?         @map("reviewer_notes")
+  approvedAt                    DateTime        @map("approved_at")
+  updatedAt                     DateTime        @updatedAt @map("updated_at")
+  essaySubmission               EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
+
+  @@map("final_reviews")
+}
+
+enum EssayStatus {
+  submitted
+  processing
+  ready_for_review
+  needs_resubmission
+  approved
+  archived
+}
