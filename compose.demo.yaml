@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: essay-correction-demo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: essay_correction
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - essay-correction-demo-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d essay_correction"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  essay-correction-demo-postgres:

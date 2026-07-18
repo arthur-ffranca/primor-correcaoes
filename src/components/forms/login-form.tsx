@@ -27,9 +27,16 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="stacked-form" onSubmit={handleSubmit}>
       <label htmlFor="email">Email</label>
-      <input id="email" name="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+      <input
+        id="email"
+        name="email"
+        type="email"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        placeholder="professora@escola.com"
+      />
 
       <label htmlFor="password">Senha</label>
       <input
@@ -38,11 +45,14 @@ export function LoginForm() {
         type="password"
         value={password}
         onChange={(event) => setPassword(event.target.value)}
+        placeholder="Sua senha"
       />
 
-      {error ? <p>{error}</p> : null}
+      {error ? <p className="form-error">{error}</p> : null}
 
-      <button type="submit">Entrar</button>
+      <button className="primary-button" type="submit">
+        Entrar no painel
+      </button>
     </form>
   );
 }

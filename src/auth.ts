@@ -1,14 +1,12 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { authConfig } from "@/auth.config";
 import { db } from "@/lib/db";
 import { loginSchema } from "@/lib/validation/auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.AUTH_SECRET ?? "local-development-secret",
-  session: {
-    strategy: "jwt",
-  },
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -42,7 +40,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
-  },
 });

@@ -27,11 +27,13 @@ model EssaySubmission {
   files               EssayFile[]
   transcription       Transcription?
   preliminaryAnalysis PreliminaryAnalysis?
+  reviewVersions      ReviewVersion[]
   finalReview         FinalReview?
   createdAt           DateTime             @default(now()) @map("created_at")
   updatedAt           DateTime             @updatedAt @map("updated_at")
   user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@map("essay_submissions")
 }
 
@@ -41,9 +43,11 @@ model EssayFile {
   storagePath      String          @map("storage_path")
   mimeType         String          @map("mime_type")
   pageOrder        Int             @map("page_order")
+  contentBytes     Bytes?          @map("content_bytes")
   createdAt        DateTime        @default(now()) @map("created_at")
   essaySubmission  EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
 
+  @@index([essaySubmissionId])
   @@map("essay_files")
 }
 
@@ -75,6 +79,27 @@ model PreliminaryAnalysis {
   @@map("preliminary_analyses")
 }
 
+model ReviewVersion {
+  id                     String              @id @default(cuid())
+  essaySubmissionId      String              @map("essay_submission_id")
+  versionNumber          Int                 @map("version_number")
+  source                 ReviewVersionSource
+  teacherInstruction     String?             @map("teacher_instruction")
+  transcriptionSnapshot  String              @map("transcription_snapshot")
+  issuesPayload          Json                @map("issues_payload")
+  criterionScoresPayload Json                @map("criterion_scores_payload")
+  totalRawScore          Float               @map("total_raw_score")
+  total1000Score         Int                 @map("total_1000_score")
+  teacherNotes           String?             @map("teacher_notes")
+  createdAt              DateTime            @default(now()) @map("created_at")
+  updatedAt              DateTime            @updatedAt @map("updated_at")
+  essaySubmission        EssaySubmission     @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
+
+  @@unique([essaySubmissionId, versionNumber])
+  @@index([essaySubmissionId])
+  @@map("review_versions")
+}
+
 model FinalReview {
   id                            String          @id @default(cuid())
   essaySubmissionId             String          @unique @map("essay_submission_id")
@@ -83,12 +108,19 @@ model FinalReview {
   approvedCriterionScoresPayload Json           @map("approved_criterion_scores_payload")
   approvedTotalRawScore         Float           @map("approved_total_raw_score")
   approvedTotal1000Score        Int             @map("approved_total_1000_score")
+  approvedReviewVersionNumber   Int?            @map("approved_review_version_number")
   reviewerNotes                 String?         @map("reviewer_notes")
   approvedAt                    DateTime        @map("approved_at")
   updatedAt                     DateTime        @updatedAt @map("updated_at")
   essaySubmission               EssaySubmission @relation(fields: [essaySubmissionId], references: [id], onDelete: Cascade)
 
   @@map("final_reviews")
+}
+
+enum ReviewVersionSource {
+  ai_initial
+  ai_adjusted
+  manual
 }
 
 enum EssayStatus {

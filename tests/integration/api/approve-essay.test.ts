@@ -52,6 +52,7 @@ describe("POST /api/essays/[essayId]/approve", () => {
           grammar: 0.5,
           aesthetics: 0,
         },
+        approvedReviewVersionNumber: 2,
       }),
     });
 
@@ -63,7 +64,16 @@ describe("POST /api/essays/[essayId]/approve", () => {
 
     expect(response.status).toBe(200);
     expect(payload.ok).toBe(true);
-    expect(upsertFinalReviewMock).toHaveBeenCalled();
+    expect(upsertFinalReviewMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({
+          approvedReviewVersionNumber: 2,
+        }),
+        create: expect.objectContaining({
+          approvedReviewVersionNumber: 2,
+        }),
+      }),
+    );
     expect(updateEssaySubmissionMock).toHaveBeenCalledWith({
       where: { id: "essay_1" },
       data: { status: "approved" },

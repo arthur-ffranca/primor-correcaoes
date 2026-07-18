@@ -75,13 +75,16 @@ The preliminary report must include:
 
 - transcription of the essay
 - explicit uncertainty markers where the image is not reliably readable
-- problematic passages
+- a concise "largest discounts first" section with the 3 to 5 issues that most reduced the score
+- problematic passages ordered by estimated score impact
 - issue type
 - explanation of why the passage is problematic
 - suggested adjustment
 - impact on rubric criteria
 - suggested score by criterion
 - overall suggested score
+
+The teacher-approved feedback pattern is intentionally executive. The system should not generate a long correction essay by default. It should help the teacher decide quickly by surfacing the most grade-relevant issues first, with short explanations and clear score impact.
 
 ### Teacher Review
 
@@ -303,7 +306,8 @@ The approved report should be structured for teacher use and future validation:
 
 - essay metadata
 - approved transcription
-- list of problematic passages
+- executive summary in 2 to 3 sentences
+- "largest discounts" list limited to the most important 3 to 5 passages
 - classification of each issue
 - explanation of why each issue matters
 - suggested or approved improvement
@@ -311,7 +315,7 @@ The approved report should be structured for teacher use and future validation:
 - criterion-by-criterion scores
 - total raw score
 - converted 0-1000 score
-- high-level insights about recurring weaknesses and strengths
+- high-level insights about recurring weaknesses and strengths, kept brief enough for batch correction work
 
 ## Recommended Technical Direction
 

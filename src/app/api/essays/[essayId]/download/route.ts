@@ -4,6 +4,10 @@ import { db } from "@/lib/db";
 import { renderApprovedReportHtml } from "@/lib/essay/report";
 import { getObjectBuffer } from "@/lib/storage";
 
+function getImageExtension(mimeType?: string | null) {
+  return mimeType === "image/png" ? "png" : "jpg";
+}
+
 export async function GET(_request: Request, context: { params: Promise<{ essayId: string }> }) {
   const session = await auth();
 
@@ -35,14 +39,16 @@ export async function GET(_request: Request, context: { params: Promise<{ essayI
 
   await Promise.all(
     essay.files.map(async (file) => {
-      const buffer = await getObjectBuffer(file.storagePath);
-      zip.file(`original/page-${file.pageOrder}.jpg`, buffer);
+      const buffer = file.contentBytes ? Buffer.from(file.contentBytes) : await getObjectBuffer(file.storagePath);
+      zip.file(`original/page-${file.pageOrder}.${getImageExtension(file.mimeType)}`, buffer);
     }),
   );
 
   const body = await zip.generateAsync({ type: "uint8array" });
+  const responseBody = new ArrayBuffer(body.byteLength);
+  new Uint8Array(responseBody).set(body);
 
-  return new Response(body, {
+  return new Response(responseBody, {
     status: 200,
     headers: {
       "content-type": "application/zip",

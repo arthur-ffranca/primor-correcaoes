@@ -3,3 +3,12 @@ node_modules/
 .next/
 .codex/
 test-results/
+output/
+.env
+.env.local
+.env.*.local
+prisma/dev.db
+tsconfig.tsbuildinfo
+
+.vercel
+.env*

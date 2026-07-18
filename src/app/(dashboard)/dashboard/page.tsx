@@ -20,11 +20,41 @@ export default async function DashboardPage() {
       status: true,
     },
   });
+  const totalEssays = essays.length;
+  const approvedEssays = essays.filter((essay) => essay.status === "approved").length;
+  const reviewEssays = essays.filter((essay) => essay.status === "ready_for_review").length;
 
   return (
-    <section>
-      <h1>Painel da Professora</h1>
-      <p>Acompanhe redacoes em revisao e correcoes aprovadas.</p>
+    <section className="dashboard-page">
+      <header className="page-hero">
+        <div>
+          <p className="eyebrow">Correções Primor</p>
+          <h1>Mesa de Correção</h1>
+          <p>Acompanhe redações em revisão, aprove devolutivas e baixe pacotes finais sem perder o fio da turma.</p>
+        </div>
+        <a className="primary-button hero-action" href="/dashboard/essays/new">
+          Nova redação
+        </a>
+      </header>
+
+      <section className="metric-grid" aria-label="Resumo das redações">
+        <article className="metric-card">
+          <span>Total</span>
+          <strong>{totalEssays}</strong>
+          <p>redações no histórico</p>
+        </article>
+        <article className="metric-card accent-card">
+          <span>Para revisar</span>
+          <strong>{reviewEssays}</strong>
+          <p>aguardando decisão</p>
+        </article>
+        <article className="metric-card">
+          <span>Aprovadas</span>
+          <strong>{approvedEssays}</strong>
+          <p>com pacote final</p>
+        </article>
+      </section>
+
       <HistoryTable rows={essays} />
     </section>
   );
