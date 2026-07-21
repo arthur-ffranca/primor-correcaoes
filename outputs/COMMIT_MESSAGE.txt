@@ -1,0 +1,30 @@
+fix: melhorar erro handling de Maritaca.AI e adicionar logging detalhado
+
+## Problema
+Quando ocorria erro na API Maritaca.AI (401, 403, timeout, etc), o usuário 
+recebia mensagem genérica "Não foi possível criar a redação" sem detalhes,
+dificultando diagnóstico.
+
+## Solução
+1. Removeu try-catch genérico que mascarava erros em essays/route.ts
+2. Adicionou logging detalhado de erro em maritaca.ts
+3. Retorna status 502 (Bad Gateway) para erros específicos de API
+4. Mensagens de erro específicas por código HTTP
+
+## Mudanças
+- src/app/api/essays/route.ts: Propaga erro real de Maritaca ao invés de mascarar
+- src/lib/essay/maritaca.ts: Adiciona logging detalhado (status, statusText, body)
+
+## Benefícios
+- Diagnóstico rápido de problemas de configuração (API key inválida, rate limit, etc)
+- Mensagens de erro específicas que guiam o usuário para solução
+- Logs detalhados para debugging de problemas de integração
+
+## Como testar
+1. npm run dev
+2. Fazer upload de redação
+3. Ver logs no console:
+   - 📤 Chamando Maritaca API...
+   - ✅ Resposta recebida com sucesso
+   - ou
+   - ❌ Maritaca API Error: [detalhes]

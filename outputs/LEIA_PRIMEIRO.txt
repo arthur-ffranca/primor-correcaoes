@@ -1,0 +1,66 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   PRIMOR CORREÇÕES - SETUP AUTOMÁTICO                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📋 ARQUIVOS INCLUSOS:
+
+  ✅ SETUP.ps1              ← EXECUTE ISSO!
+  ✅ DEPLOY.ps1             (alternativa mais simples)
+  ✅ INSTALE_AGORA.md       
+  ✅ REVISAO_COMPLETA.md    
+  ✅ COMMIT_MESSAGE.txt     
+  ✅ src/app/api/essays/route.ts
+  ✅ src/lib/essay/maritaca.ts
+
+
+🚀 COMO USAR:
+
+PASSO 1: Baixe esta pasta "outputs"
+  ↳ Descompacte em algum lugar (ex: Downloads)
+
+PASSO 2: Abra PowerShell na raiz do seu projeto
+  ↳ Clique direito na pasta → "Open PowerShell here"
+  ↳ ou cd seu-projeto no PowerShell
+
+PASSO 3: Execute o script
+  ↳ .\outputs\SETUP.ps1
+  ↳ Se der erro de permissão:
+     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+     .\outputs\SETUP.ps1
+
+PASSO 4: Escolha a opção
+  ↳ 4 = Executar tudo automaticamente (recomendado!)
+
+
+⚡ ALTERNATIVA (mais rápido):
+
+  .\outputs\DEPLOY.ps1
+
+
+✨ PRONTO!
+
+Seu projeto vai ter:
+  ✅ Pasta outputs/ com os arquivos de referência
+  ✅ Correções aplicadas em src/
+  ✅ 2 commits no Git (um pra docs, um pra correção)
+  ✅ Tudo fazendo push automaticamente
+
+
+📝 NOTAS:
+
+  • Se o SETUP.ps1 pedir credenciais do Git, é normal
+  • Se o push falhar, pode ser CORS (rode novamente)
+  • Leia REVISAO_COMPLETA.md pra entender tudo que mudou
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+É literalmente só:
+
+  1. Baixa esta pasta
+  2. Abre PowerShell no seu projeto
+  3. .\outputs\SETUP.ps1
+  4. Escolhe opção 4
+  5. Pronto! ✅
+
+═══════════════════════════════════════════════════════════════════════════════
